@@ -1,0 +1,107 @@
+<template>
+    <div class="invoice-box">
+        <table cellpadding="0" cellspacing="0">
+            <tr class="top">
+                <td colspan="4">
+                    <table>
+                        <tr>
+                            <td class="title">
+                                <img src="https://www.sparksuite.com/images/logo.png"
+                                     style="width:100%; max-width:300px;">
+                            </td>
+
+                            <td>
+                                Invoice #: 123<br> Created: January 1, 2015<br> Due: February 1, 2015
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="information">
+                <td colspan="4">
+                    <table>
+                        <tr>
+                            <td>
+                                Sparksuite, Inc.<br> 12345 Sunny Road<br> Sunnyville, CA 12345
+                            </td>
+
+                            <td>
+                                Acme Corp.<br> John Doe<br> john@example.com
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="heading">
+                <td colspan="3">Payment Method</td>
+                <td>Check #</td>
+            </tr>
+
+            <tr class="details">
+                <td colspan="3">Check</td>
+                <td>10000</td>
+            </tr>
+
+            <tr class="heading">
+                <td>Item</td>
+                <td>Unit Cost</td>
+                <td>Quantity</td>
+                <td>Price</td>
+            </tr>
+
+            <tr class="item" v-for="item in items">
+                <td><input v-model="item.description"/></td>
+                <td>$<input type="number" v-model="item.price"/></td>
+                <td><input type="number" v-model="item.quantity"/></td>
+                <td>${{ item.price * item.quantity | currency }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="4">
+                    <button class="btn-add-row" @click.prevent="addRow">Add row</button>
+                </td>
+            </tr>
+
+            <tr class="total">
+                <td colspan="3"></td>
+                <td>Total: ${{ total | currency }}</td>
+            </tr>
+        </table>
+    </div>
+</template>
+
+<script>
+    export default {
+
+        data() {
+            return {
+                name: "sample",
+
+                items: [
+                    {description: "", quantity: 0, price: 0},
+
+                ]
+            }
+        },
+        computed: {
+            total() {
+                return this.items.reduce(
+                    (acc, item) => acc + item.price * item.quantity,
+                    0
+                );
+            }
+        },
+        methods: {
+            addRow() {
+                this.items.push({description: "", quantity: 1, price: 0});
+            }
+        },
+        filters: {
+            currency(value) {
+                return value.toFixed(2);
+            }
+        }
+    }
+</script>
