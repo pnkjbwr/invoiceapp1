@@ -20,6 +20,7 @@ import vueSelect from 'vue-select';
 
 Vue.component('vue-select',vueSelect);
 Vue.component('invoice-component', require('./components/InvoiceComponent.vue').default);
+Vue.component('salesq-component', require('./components/SalesQoutComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

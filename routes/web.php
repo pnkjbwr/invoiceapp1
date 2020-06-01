@@ -1,5 +1,6 @@
 <?php
 
+use App\Product;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,4 +28,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('invoices', 'InvoiceController');
     Route::resource('taxrates', 'TaxrateController');
     Route::resource('products', 'ProductController');
+
+    Route::get('salesq', function () {
+        $products = Product::with('taxRate')->get();
+        return view('admin.sales.index',compact('products'));
+    });
 });

@@ -4,21 +4,20 @@
         <div id="app">
             <form action="#" method="post" id="invoiceForm">
                 <!-- csrf -->
-            
+
                 <input type="hidden" name="finalTaxable0" id="finalTaxable0" value="">
                 <input type="hidden" name="finalTaxable5" id="finalTaxable5" value="">
                 <input type="hidden" name="finalTaxable12" id="finalTaxable12" value="">
                 <input type="hidden" name="finalTaxable18" id="finalTaxable18" value="">
                 <input type="hidden" name="finalTaxable28" id="finalTaxable28" value="">
-            
+
                 <input type="hidden" name="finalTotalTax" id="finalTotalTax" value="">
                 <input type="hidden" name="finalTotalTaxable" id="finalTotalTaxable" value="">
                 <input type="hidden" name="finalGT" id="finalGT" value="">
-            
-                
+
                 <div class="row no-margin">
                     <div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>
-                        <h4>Invoice To</h4>
+                        <h4>Invoice to</h4>
                         <div class="form-group">
                             <label for="clientCompanyName">Customer Name</label>
                             <input type="text" class="form-control" name="clientCompanyName" id="clientCompanyName"
@@ -58,9 +57,9 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <hr>
-            
+
                 <table class="table table-striped table-bordered" id="data">
                     <tr>
                         <th scope="col">#Del</th>
@@ -78,11 +77,11 @@
                             <!-- <i class="fa fa-trash" aria-hidden="true" @click="deleteRow(k, item)"></i> -->
                         </td>
                         <td style="">
-                            <!-- <input class="form-control" type="text" v-model="invoice_product.product_name"/> -->
+                            <!-- <input class="form-control" type="text" v-model="item.selectedProduct.p_name"/> -->
                             <!-- Item Name -->
-                            <vue-select class="vue-select2" v-model="item.selectedProduct" label="p_name" :options="products" :value="products.id" :searchable="true" language="en-US">
+                            <vue-select @input="product => setSelected(product,k)" class="vue-select2" label="p_name" :options="products" :value="products.id" :searchable="true" language="en-US">
                             </vue-select>
-                        </td> 
+                        </td>
                         <td>
                             <!-- Price -->
                             <input class="form-control text-right" type="number" min="0" step=".01" v-model="item.selectedProduct.price"
@@ -125,7 +124,7 @@
                     <!-- ************* -->
                     <div style="margin-left: 25%"
                         class='col-xs-offset-2 col-xs-9 col-sm-offset-2 col-md-offset-3 col-lg-offset-3 col-sm-4 col-md-3 col-lg-3'>
-            
+
                         <div class="form-group">
                             <label>Subtotal: &nbsp;</label>
                             <div class="input-group mb-3">
@@ -199,13 +198,13 @@
         computed: {
 
 
-            
+
 
 
             },
         methods: {
             addRow() {
-                
+
                 console.log('add row lines = '+ this.lines);
                 this.lines += 1;
                 console.log('add row lines+1 = '+ this.lines);
@@ -220,15 +219,15 @@
 
                 }});
                 this.calculateTotal();
-                
+
             },
             deleteRow(index, item) {
 
                 console.log('Delete Clicked Lines = '+ this.lines);
-                
+
                 //Flag to count Lines
                 //Atleast One Line must be there
-                if (this.lines >= 1) 
+                if (this.lines >= 1)
                 {
                     this.lines -= 1;
                     var idx = this.items.indexOf(item);
@@ -242,7 +241,7 @@
                 console.log('After Delete Clicked Lines = '+ this.lines);
                 this.calculateTotal();
             },
-            
+
             calcLineGstAmt(price,qty,rate) {
                 var rowDiscount = parseFloat(0.00);
                 var rowTotal = parseFloat(price) * parseFloat(qty);
@@ -272,11 +271,31 @@
                 this.calculateTotal();
             },
 
+            setSelected(product,key) {
+
+                this.items[key].selectedProduct = {
+                    "id":product.id,
+                    "p_name":product.p_name,
+                    "unit_name":product.unit_name,
+                    "p_type":product.p_type,
+                    "hsn_sac_code":product.hsn_sac_code,
+                    "istaxable":product.istaxable,
+                    "isactive":product.isactive,
+                    "taxrate_id":product.taxrate_id,
+                    "price":product.price,
+                    "created_at":product.created_at,
+                    "updated_at":product.updated_at,
+                    "tax_rate":product.tax_rate,
+                    "qty":1
+                };
+                //this.calculateTotal();
+            },
+
             /* PS Calculations Ends */
             /* Line Total  */
             calcLine(item)
             {
-                
+
                 // var discount = 0;
                 var rowDiscount = parseFloat(0.00);
                 var rowPrice = parseFloat(item.selectedProduct.price);
@@ -307,11 +326,11 @@
             },
             /* Grand Total */
             /* Grand Total */
-            calculateTotal() 
+            calculateTotal()
             {
 
                 console.log('calcTotal() called');
-                
+
                 var subtotal,total;
                 // var lineTotal;
 

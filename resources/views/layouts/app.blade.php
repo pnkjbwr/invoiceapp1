@@ -139,6 +139,10 @@
                             <li class="nav-item">
                                 <b><a class="nav-link" href="{{ route('invoices.index') }}">Invoices</a></b>
                             </li>
+
+                            <li class="nav-item">
+                                <b><a class="nav-link" href="{{ url('salesq') }}">Sales Qoutation</a></b>
+                            </li>
                         </ul>
                     @endguest
 
