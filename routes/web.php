@@ -23,8 +23,9 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
-    
+
     Route::resource('customers', 'CustomerController');
+    Route::get('/search_customer','CustomerController@searchCustomer');
     Route::resource('invoices', 'InvoiceController');
     Route::resource('taxrates', 'TaxrateController');
     Route::resource('products', 'ProductController');

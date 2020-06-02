@@ -20,8 +20,12 @@
                         <h4>Invoice to</h4>
                         <div class="form-group">
                             <label for="clientCompanyName">Customer Name</label>
-                            <input type="text" class="form-control" name="clientCompanyName" id="clientCompanyName"
-                                placeholder="Company Name" value="PANKAJ SANKHLA">
+<!--                            <input type="text" class="form-control" name="clientCompanyName" id="clientCompanyName" placeholder="Company Name" value="PANKAJ SANKHLA">-->
+                            <vue-select name="clientCompanyName" id="clientCompanyName" language="en-US" @search="fetchOptions" :options="options" label="cname" :value="options.id" v-model="selectedClient">
+                                <template v-slot:no-options="{ search, searching }">
+                                    <em v-if="searching"><button type="button" class="btn btn-light w-100" @click="addnewcustomer()" data-toggle="modal" data-target="#addNewCustomerModal">Add New</button></em>
+                                </template>
+                            </vue-select>
                         </div>
                         <div class="form-group">
                             <label for="clientAddress">Address</label>
@@ -80,6 +84,9 @@
                             <!-- <input class="form-control" type="text" v-model="item.selectedProduct.p_name"/> -->
                             <!-- Item Name -->
                             <vue-select @input="product => setSelected(product,k)" class="vue-select2" label="p_name" :options="products" :value="products.id" :searchable="true" language="en-US">
+                                <template v-slot:no-options="{ search, searching }">
+                                    <em v-if="searching"><button type="button" class="btn btn-light w-100" data-toggle="modal" data-target="#addNewProductModal">Add New</button></em>
+                                </template>
                             </vue-select>
                         </td>
                         <td>
@@ -140,7 +147,7 @@
                             <label v-else>Total IGST Amount: &nbsp;</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">&#8377;</span>
+                                    <span class="input-group-text" id="basic-addon2">&#8377;</span>
                                 </div>
                                 <input readonly min="0" type="number" class="form-control" name="tax_percent" id="totalTaxAmt" placeholder="Tax" v-model="invoice_totaltax">
                             </div>
@@ -149,7 +156,7 @@
                             <label>Grand Total: &nbsp;</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">&#8377;</span>
+                                    <span class="input-group-text" id="basic-addon3">&#8377;</span>
                                 </div>
                                 <input readonly min="0" type="text" class="form-control" name="invoice_total"
                                     id="grandTotal" v-model="invoice_grandtotal">
@@ -158,6 +165,125 @@
                     </div>
                 </div>
             </form>
+            <div class="modal fade bd-example-modal-lg" id="addNewCustomerModal" tabindex="-1" role="dialog" aria-labelledby="customerModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Create Customer</h5>
+                            </div>
+                            <div class="card-body">
+                                <form action="" method="POST" id="stepForm" class="steps-validation wizard-circle">
+                                    <fieldset>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <div class="form-group"><label for="cname" class="required">Full Name</label> <input type="text" placeholder="Enter Customer Name" id="cname" name="cname" required="required" class="form-control required mask_UPPERCASE"></div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-group"><label for="mobile1" class="required">Registered Mobile</label> <input type="text" id="mobile1" name="mobile1" required="required" class="form-control mask_mobile"></div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-group"><label for="email">Email</label> <input type="email" id="email" name="email" class="form-control mask_lowercase"></div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group"><label for="firm">Company Name</label> <input type="text" id="firm" name="firm" class="form-control mask_UPPERCASE"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <div class="form-group"><label for="panno">PAN NO</label> <input type="text" id="panno" name="panno" class="form-control mask_panno"></div>
+                                            </div>
+                                            <div class="col-sm-3"><label for="gstno">GSTIN</label> <input type="text" id="gstno" name="gstno" class="form-control mask_UPPERCASE"></div>
+                                            <div class="col-sm-3"><label for="gst_state_code">GST State Code</label> <input type="text" id="gst_state_code" name="gst_state_code" class="form-control mask_UPPERCASE"></div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-12"><label for="full_address">Full Address</label> <input type="text" id="full_address" name="full_address" class="form-control mask_UPPERCASE"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <div class="form-group"><label for="city">City</label> <input type="text" id="city" name="city" class="form-control mask_UPPERCASE"></div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group"><label for="pincode">Pin Code</label> <input type="text" id="pincode" name="pincode" class="form-control mask_pincode"></div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group"><label for="state">State</label> <input type="text" id="state" name="state" class="form-control mask_UPPERCASE"></div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group"><label for="country">Country</label> <input type="text" id="country" name="country" class="form-control mask_UPPERCASE"></div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-group"><label for="record_created_by" class="required">Record Created By</label> <input type="text" id="record_created_by" name="record_created_by" value="PANKAJ" required="required" readonly="readonly" class="form-control"></div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset>
+                                        <div class="row float-right"><input type="submit" value="Add New Customer" class="btn btn-info"></div>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade bd-example-modal-lg" id="addNewProductModal" tabindex="-1" role="dialog" aria-labelledby="productModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header"><h5>Create New Tax Rate</h5></div>
+                            <div class="card-body">
+                                <div class="alert alert-success" role="alert"></div>
+                                <form action="" method="POST">
+                                    <input type="hidden" name="unit_name" value="pcs">
+                                    <input type="hidden" name="p_type" value="service">
+                                    <input type="hidden" name="isactive" value="1">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="p_name">Name</label>
+                                            <input type="text" class="form-control" id="p_name" name="p_name" placeholder="Enter Product Name" autocomplete="off" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 row">
+                                        <div class="form-group col-6">
+                                            <label for="price">Price</label>
+                                            <input type="number" step="0.1" min="0" max="1000000" class="form-control" id="price" name="price" placeholder="Enter Price like 5.50" autocomplete="off">
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label for="hsn_sac_code">HSN / SAC</label>
+                                            <input type="text" class="form-control" id="hsn_sac_code" name="hsn_sac_code" placeholder="Enter HSN / SAC Code" autocomplete="off">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 row">
+                                        <div class="col-6">
+                                            <p class="mb-0">Taxable</p>
+                                            <input type="checkbox" checked>
+                                        </div>
+                                        <div class="col-6">
+                                            <fieldset class="form-group" id="taxrate_idFieldset">
+                                                <label for="taxrate_id">Tax Rate</label>
+                                                <select class="form-control select2" id="taxrate_id" name="taxrate_id" placeholder="Choose Tax Rate">
+                                                    <option value="">Select Option</option>
+                                                </select>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        &nbsp;&nbsp;<button type="reset" class="btn btn-primary">Reset</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         </div>
     </div>
@@ -172,6 +298,7 @@
             return {
                 lines: 1,
 
+                selectedClient: null,
                 clientStateCode: "29",
                 sellerStateCode: "29",
 
@@ -189,20 +316,15 @@
                 name: "sample",
                 selectedProduct: [],
                 items: [],
+                options:[]
             }
         },
-
-        mounted() {
-
-        },
-        computed: {
-
-
-
-
-
-            },
+        mounted() {},
+        computed: {},
         methods: {
+            addnewcustomer(){
+                console.log("add new customer");
+            },
             addRow() {
 
                 console.log('add row lines = '+ this.lines);
@@ -354,12 +476,27 @@
                 //Recalculating Grand Total
                 this.invoice_grandtotal = parseFloat(this.invoice_subtotal) + parseFloat(this.invoice_totaltax);
             },
-
+            fetchOptions(search) {
+                fetch(`search_customer?name=${search}`)
+                .then(res => {
+                    res.json().then(customers => {
+                        if(customers !== null){
+                            this.options = customers;
+                            // console.log(json);
+                        }
+                    });
+                });
+            },
 
         },
         filters: {
             currency(value) {
                 return value.toFixed(2);
+            }
+        },
+        watch:{
+            selectedClient(newValue){
+                this.clientStateCode = newValue.gst_state_code;
             }
         }
     }

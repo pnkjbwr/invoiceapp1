@@ -87,4 +87,11 @@ class CustomerController extends Controller
     {
         //
     }
+
+    public function searchCustomer(Request $request)
+    {
+        $search_customer = Customer::where('cname','LIKE',"%".$request->name)->get();
+        return response()->json($search_customer,200);
+        //return $request->all();
+    }
 }

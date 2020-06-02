@@ -20,8 +20,12 @@
                         <h4>Sales Qoutation</h4>
                         <div class="form-group">
                             <label for="clientCompanyName">Customer Name</label>
-                            <input type="text" class="form-control" name="clientCompanyName" id="clientCompanyName"
-                                placeholder="Company Name" value="PANKAJ SANKHLA">
+                            <!--<input type="text" class="form-control" name="clientCompanyName" id="clientCompanyName" placeholder="Company Name" value="PANKAJ SANKHLA">-->
+                            <vue-select name="clientCompanyName" id="clientCompanyName" language="en-US" @search="fetchOptions" :options="options" label="cname" :value="options.id">
+                                <template v-slot:no-options="{ search, searching }">
+                                    <em v-if="searching"><button type="button" class="btn btn-light w-100" @click="addnewcustomer()">Add New</button></em>
+                                </template>
+                            </vue-select>
                         </div>
                         <div class="form-group">
                             <label for="clientAddress">Address</label>
@@ -80,6 +84,9 @@
                             <!-- <input class="form-control" type="text" v-model="item.selectedProduct.p_name"/> -->
                             <!-- Item Name -->
                             <vue-select @input="product => setSelected(product,k)" class="vue-select2" label="p_name" :options="products" :value="products.id" :searchable="true" language="en-US">
+                                <template v-slot:no-options="{ search, searching }">
+                                    <em v-if="searching"><button type="button" class="btn btn-light w-100">Add New</button></em>
+                                </template>
                             </vue-select>
                         </td>
                         <td>
@@ -189,6 +196,7 @@
                 name: "sample",
                 selectedProduct: [],
                 items: [],
+                options:[]
             }
         },
 
@@ -203,6 +211,9 @@
 
             },
         methods: {
+            addnewcustomer(){
+                console.log("add new customer");
+            },
             addRow() {
 
                 console.log('add row lines = '+ this.lines);
@@ -354,7 +365,17 @@
                 //Recalculating Grand Total
                 this.invoice_grandtotal = parseFloat(this.invoice_subtotal) + parseFloat(this.invoice_totaltax);
             },
-
+            fetchOptions(search) {
+                fetch(`search_customer?name=${search}`)
+                    .then(res => {
+                        res.json().then(customers => {
+                            if(customers !== null){
+                                this.options = customers;
+                                // console.log(json);
+                            }
+                        });
+                    });
+            },
 
         },
         filters: {
